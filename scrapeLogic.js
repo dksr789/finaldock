@@ -9,7 +9,7 @@ const scrapeLogic = async (res) => {
       "--single-process",
       "--no-zygote",
     ],
-    headless: false, // Run in headful mode
+    headless: true, // Run in headful mode
     defaultViewport: null, // Use default viewport size
     executablePath:
       process.env.NODE_ENV === "production"
