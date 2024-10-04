@@ -9,8 +9,8 @@ const scrapeLogic = async (res) => {
       "--single-process",
       "--no-zygote",
     ],
-    headless: true, // Run in headful mode
-    defaultViewport: null, // Use default viewport size
+    headless: true,
+    defaultViewport: null,
     executablePath:
       process.env.NODE_ENV === "production"
         ? process.env.PUPPETEER_EXECUTABLE_PATH
@@ -64,18 +64,25 @@ const scrapeLogic = async (res) => {
       },
     ];
 
-    await page.setCookie(...cookies); // Spread operator to pass array
+    await page.setCookie(...cookies);
 
+    // Navigate to the desired page
     await page.goto('https://noxtools.com/secure/protect/new-rewrite?f=125&url=/&host=quillbot.noxtools.com&ssl=on', {
       waitUntil: 'networkidle0',
     });
 
-    res.send('Thank you for visiting');
+    // Get the entire HTML content of the page
+    const pageContent = await page.content();
+
+    // Send the entire HTML as a response
+    res.send(pageContent);
+
   } catch (error) {
     console.error('Error during scraping:', error);
     res.status(500).send('An error occurred during scraping');
+  } finally {
+    await browser.close(); // Close the browser
   }
-  // Removed the close browser line
 };
 
 module.exports = { scrapeLogic };
